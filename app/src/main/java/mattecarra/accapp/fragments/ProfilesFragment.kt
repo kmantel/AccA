@@ -59,6 +59,7 @@ class ProfilesFragment : ScopedFragment(),
     private lateinit var mSharedViewModel: SharedViewModel
     private lateinit var mProfilesAdapter: ProfileListAdapter
     private lateinit var mContext: Context
+    private lateinit var prefs: SharedPreferences
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
@@ -92,7 +93,7 @@ class ProfilesFragment : ScopedFragment(),
 
         mContext = requireContext()
 
-        val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
         mSharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
         mProfilesAdapter = ProfileListAdapter(mContext, ProfileUtils.getCurrentProfile(prefs))
@@ -231,6 +232,8 @@ class ProfilesFragment : ScopedFragment(),
 
         val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
         itemTouchHelper.attachToRecyclerView(profilesRecycler)
+
+        checkProfile()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String)
@@ -302,5 +305,18 @@ class ProfilesFragment : ScopedFragment(),
     {
         // Delete the selected profile (3rd option).
         mProfilesViewModel.deleteProfile(profile)
+    }
+
+    fun checkProfile() {
+        launch {
+            val currentConfig = Acc.instance.readConfig()
+            val profs = mProfilesViewModel.getProfiles()
+            for (p in profs) {
+                if (currentConfig.isEquivalentTo(p.accConfig)) {
+                    mProfilesAdapter.setActiveProfile(p.uid)
+//                    ProfileUtils.saveCurrentProfile(p.uid, prefs)
+                }
+            }
+        }
     }
 }

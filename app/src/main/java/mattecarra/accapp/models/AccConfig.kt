@@ -107,4 +107,21 @@ import java.io.Serializable
             return context.getString(R.string.template_cool_down_profile, atPercent, charge, pause)
         }
     }
+
+    fun isEquivalentTo(other: AccConfig): Boolean {
+        return (
+            this.configCapacity == other.configCapacity
+            && this.configVoltage == other.configVoltage
+            && this.configCurrMax == other.configCurrMax
+            && this.configTemperature == other.configTemperature
+            && this.configOnBoot == other.configOnBoot
+            && this.configOnPlug == other.configOnPlug
+            && this.configCoolDown == other.configCoolDown
+            && this.configResetUnplugged == other.configResetUnplugged
+            && this.configResetBsOnPause == other.configResetBsOnPause
+//            && this.configChargeSwitch == other.configChargeSwitch
+            && this.configIsAutomaticSwitchingEnabled == other.configIsAutomaticSwitchingEnabled
+//            && this.prioritizeBatteryIdleMode == other.prioritizeBatteryIdleMode
+        )
+    }
 }
