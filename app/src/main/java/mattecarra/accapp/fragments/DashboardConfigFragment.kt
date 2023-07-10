@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import mattecarra.accapp.R
 import mattecarra.accapp.acc.Acc
 import mattecarra.accapp.activities.AccConfigEditorActivity
+import mattecarra.accapp.adapters.ProfileListAdapter
 import mattecarra.accapp.databinding.ProfilesItemBinding
 import mattecarra.accapp.models.AccConfig
 import mattecarra.accapp.utils.Constants
@@ -30,6 +31,7 @@ class DashboardConfigFragment() : ScopedFragment(), SharedPreferences.OnSharedPr
     private lateinit var mViewModel: ProfilesViewModel
     private lateinit var mSharedViewModel: SharedViewModel
     private lateinit var mPrefs: SharedPreferences
+    private lateinit var mProfilesAdapter: ProfileListAdapter
 
     private var mActiveProfile: Boolean = false
 
@@ -75,8 +77,10 @@ class DashboardConfigFragment() : ScopedFragment(), SharedPreferences.OnSharedPr
         binding.editConfigButton.visibility = View.VISIBLE;
 
         mContext = requireContext()
+        val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
         mViewModel = ViewModelProvider(this).get(ProfilesViewModel::class.java)
         mSharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
+        mProfilesAdapter = ProfileListAdapter(mContext, ProfileUtils.getCurrentProfile(prefs))
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(context)
         mPrefs.registerOnSharedPreferenceChangeListener(this)
@@ -106,7 +110,21 @@ class DashboardConfigFragment() : ScopedFragment(), SharedPreferences.OnSharedPr
             val selProfile = mViewModel.getProfileById(profileId)
 
             var name = getString(R.string.profile_not_selected)
-            if (selProfile != null && currentConfig == selProfile.accConfig) name = selProfile.profileName
+            if (selProfile != null && currentConfig == selProfile.accConfig) {
+                name = selProfile.profileName
+                mProfilesAdapter.setActiveProfile(selProfile.uid)
+            }
+            else {
+                val profs = mViewModel.getProfiles()
+                for (p in profs) {
+                    if (currentConfig.isEquivalentTo(p.accConfig)) {
+                        name = p.profileName
+                        mProfilesAdapter.setActiveProfile(p.uid)
+//                        ProfileUtils.saveCurrentProfile(p.uid, mPrefs)
+                        break
+                    }
+                }
+            }
 
             updateInfo(name, currentConfig)
         }
