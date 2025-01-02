@@ -50,6 +50,10 @@ data class ConfigUpdater(val accConfig: AccConfig, val cue: ConfigUpdaterEnable)
 
         val capacityUpdate = cue.sendCapacity && acc.updateAccCapacity(accConfig.configCapacity.shutdown, accConfig.configCoolDown?.atPercent ?: 101, accConfig.configCapacity.resume, accConfig.configCapacity.pause)
         LogExt().d(TAG, (if(!cue.sendCapacity) "[off]" else if (capacityUpdate) "[ok]" else "[fail]")+" capacity: ${accConfig.configCapacity}")
+        // NOTE: this will hang if profile has not yet been updated (one time, ever? unsure) while plugged into charger:
+        // /dev/.vr25/acc/acca --set --current -
+        //Need to read default max charging current value(s) first
+        //Ensure the charger is plugged 🔌
         val voltControl = cue.sendVoltage && acc.updateAccVoltControl(accConfig.configVoltage.controlFile, accConfig.configVoltage.max)
         LogExt().d(TAG, (if(!cue.sendVoltage) "[off]" else if (voltControl) "[ok]" else "[fail]")+" voltage: ${accConfig.configVoltage}")
         val currentMax = cue.sendCurrMax && acc.updateAccCurrentMaxCommand(accConfig.configCurrMax)
