@@ -80,7 +80,7 @@ class DashboardFragment : ScopedFragment()
             dash.daemon?.let { daemon -> setAccdStatusUi(daemon) }
 
             // Battery/Charge details
-            binding.dashBatteryCapacityPBar.progress = dash.batteryInfo.capacity
+            binding.dashBatteryCapacityTextView.text = dash.batteryInfo.capacity.toString() + "%"
             binding.dashBatteryStatusTextView.text = getString(R.string.info_status_extended, dash.batteryInfo.status, dash.batteryInfo.chargeType)
 
             binding.dashBatteryChargingSpeedTextView.text = if (dash.batteryInfo.isCharging()) getString(R.string.info_charging_speed) else getString(R.string.info_discharging_speed)
