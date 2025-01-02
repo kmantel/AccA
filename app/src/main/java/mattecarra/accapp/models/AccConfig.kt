@@ -119,9 +119,9 @@ import java.io.Serializable
             && this.configCoolDown == other.configCoolDown
             && this.configResetUnplugged == other.configResetUnplugged
             && this.configResetBsOnPause == other.configResetBsOnPause
-//            && this.configChargeSwitch == other.configChargeSwitch
+            && this.configChargeSwitch == other.configChargeSwitch
             && this.configIsAutomaticSwitchingEnabled == other.configIsAutomaticSwitchingEnabled
-//            && this.prioritizeBatteryIdleMode == other.prioritizeBatteryIdleMode
+            && this.prioritizeBatteryIdleMode == other.prioritizeBatteryIdleMode
         )
     }
 }
