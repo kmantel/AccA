@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: 'recursive'
 
@@ -58,7 +58,7 @@ jobs:
           gradle-home-cache-cleanup: true
 
       - name: Uploading Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: /home/runner/work/AccA-release/AccA-release/app/build/outputs/apk/debug/*.apk 
           name: apk
