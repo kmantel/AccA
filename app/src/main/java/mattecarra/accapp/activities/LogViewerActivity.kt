@@ -112,7 +112,7 @@ class LogViewerActivity : AppCompatActivity()
             }
         })
 
-        job = Shell.su("acc -L").to(object : CallbackList<String>()
+        job = Shell.su("acc --log").to(object : CallbackList<String>()
             {
                 override fun onAddElement(e: String?)
                 {
